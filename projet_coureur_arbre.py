@@ -31,8 +31,6 @@ class arbre:
         self.y = 60
         self.width = self.image.get_width()
         self.height = self.image.get_height()
-        # Position Y variable aléatoire pour plus de variété
-        self.y = random.randint(40, 10000)
     
     def affichage_arbre(self, fenetre):
         """Affiche l'arbre à l'écran

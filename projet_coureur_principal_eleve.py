@@ -49,7 +49,7 @@ def gerer_maisons(liste_maisons):
         liste_maisons: liste des maisons actives
     """
     # Créer une nouvelle maison si la dernière est assez loin
-    if len(liste_maisons) == 0 or liste_maisons[-1].x > 45000:
+    if len(liste_maisons) == 0 or liste_maisons[-1].x > 450:
         liste_maisons.append(maison(WIDTH))
     
     # Afficher et déplacer les maisons
