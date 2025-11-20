@@ -1,12 +1,14 @@
-# Jeu style Mario Bros
+# Jeu style geometry dash
 
-- Skin Mario
-- Ajouter arbres
-- Ajouter maisons
+- Skin choissisable
+- Ajouter menu
+- animations
+- Ajouter spikes (2 tailles)
+- Ajouter cubes
 - Ajouter sauts
+- ajouter orbs ?
 
 
-- Ajouter roulade ?
-- Ajouter skybox ?
-- Ajouter cycle jour nuit ?
-- Ajouter des ennemis ?
+- Ajouter ship ?
+- Ajouter changement de ciel ?
+- Ajouter des portails ?
