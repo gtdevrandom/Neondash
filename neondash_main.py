@@ -1,8 +1,8 @@
 import pygame
 import sys
-from projet_coureur_personnage import personnage
-from projet_coureur_cube import Cube
-from projet_coureur_spike import Spike
+from neondash_personnage import personnage
+from neondash_cube import Cube
+from neondash_spike import Spike
 
 WIDTH, HEIGHT = 800, 400
 FPS = 60
@@ -165,3 +165,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
