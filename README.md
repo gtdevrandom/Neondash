@@ -9,6 +9,8 @@
     
 
 - Skin choissisable
+    - Cube
+    - Ship 
 - animations
 - Ajouter spikes (2 tailles)
 - Ajouter cubes
@@ -20,3 +22,5 @@
 - ajouter zig zag
 - Ajouter changement de ciel ?
 - Ajouter des portails ?
+    - Portails qui fait changer le sens 
+    - Portails qui fait transformer en ship     
