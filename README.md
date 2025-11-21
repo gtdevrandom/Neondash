@@ -7,7 +7,7 @@
         - Musique
     - ~~skins~~
     
-
+- musique
 - Skin choissisable
     - Cube
     - Ship 
@@ -30,3 +30,10 @@
 - Ajouter changement de ciel ?
 - Ajouter des portails ?
     - Portails qui fait transformer en ship     
+
+
+# Ordre du fond de la map
+- Fond de map
+- Chaines + grottes ?
+- Particules
+- jeu
