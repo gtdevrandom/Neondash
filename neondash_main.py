@@ -92,11 +92,68 @@ def game_screen(window):
     player = personnage(100, HEIGHT//2, size=50, color=(0, 200, 255), screen_height=HEIGHT)
 
     # Chargement de l'image de fond
-
     fond_img = pygame.image.load('fond/base/fond.png').convert()
     fond_img = pygame.transform.scale(fond_img, (WIDTH, HEIGHT))
     fond_x = 0
     fond_speed = 100  # pixels par seconde (ajuster pour la vitesse de défilement)
+
+    # Chargement des images décoratives
+    deco_infos = [
+        # (chemin, rareté, type)
+        ('fond/lanternes/lanterne1.png', 1, 'lanterne'),
+        ('fond/lanternes/lanterne2.png', 1, 'lanterne'),
+        ('fond/lanternes/lanterne3.png', 1, 'lanterne'),
+        ('fond/brique/brique.png', 0.3, 'brique'),  # rareté plus faible
+        ('fond/chaines/chaine.png', 1, 'chaine'),
+        ('fond/chaines/chaine1.png', 1, 'chaine'),
+        ('fond/chaines/chaine2.png', 1, 'chaine'),
+        ('fond/chaines/chaine3.png', 1, 'chaine'),
+    ]
+    deco_images = []
+    for path, _, deco_type in deco_infos:
+        img = pygame.image.load(path).convert_alpha()
+        # Double la hauteur
+        new_height = HEIGHT
+        # Double la largeur pour lanternes et chaines
+        if deco_type in ('lanterne', 'chaine'):
+            new_width = img.get_width() * 2
+        else:
+            new_width = img.get_width()
+        img = pygame.transform.scale(img, (new_width, new_height))
+        deco_images.append(img)
+
+    # Liste des décorations à afficher (x, y, idx_image)
+    decorations = []
+    min_distance = 400  # distance minimale entre deux décorations
+    deco_speed = 120  # px/s
+    max_deco_on_screen = 3
+
+    def spawn_deco(last_idx=None):
+        # Choix de l'image avec rareté, sans répéter la dernière
+        idxs = list(range(len(deco_infos)))
+        weights = [info[1] for info in deco_infos]
+        if last_idx is not None and len(idxs) > 1:
+            # Empêche de choisir la même image que la précédente
+            weights = [w if i != last_idx else 0 for i, w in enumerate(weights)]
+        idx = random.choices(idxs, weights=weights)[0]
+        img = deco_images[idx]
+        deco_type = deco_infos[idx][2]
+        if deco_type == 'chaine':
+            y = 0
+        else:
+            y = random.randint(0, HEIGHT - img.get_height())
+        x = WIDTH + random.randint(0, 200)
+        return (x, y, idx)
+
+    # Initialisation de quelques décorations
+    last_deco_x = 0
+    last_idx = None
+    for _ in range(max_deco_on_screen):
+        deco = spawn_deco(last_idx)
+        if not decorations or deco[0] - last_deco_x > min_distance:
+            decorations.append(deco)
+            last_deco_x = deco[0]
+            last_idx = deco[2]
 
     mouse_held = False
     while running:
@@ -110,6 +167,22 @@ def game_screen(window):
         # Affichage du fond (2 images pour recoller à l'infini)
         window.blit(fond_img, (fond_x, 0))
         window.blit(fond_img, (fond_x + WIDTH, 0))
+
+        # Défilement et affichage des décorations
+        for i, (x, y, idx) in enumerate(decorations):
+            decorations[i] = (x - deco_speed * dt, y, idx)
+            window.blit(deco_images[idx], (x, y))
+
+        # Suppression des décorations hors écran
+        decorations = [d for d in decorations if d[0] + deco_images[d[2]].get_width() > 0]
+
+        # Ajout de nouvelles décorations si besoin
+        if not decorations or (decorations and decorations[-1][0] < WIDTH - min_distance):
+            # Vérifie la distance minimale avec la dernière déco
+            last_idx = decorations[-1][2] if decorations else None
+            new_deco = spawn_deco(last_idx)
+            if not decorations or new_deco[0] - decorations[-1][0] > min_distance:
+                decorations.append(new_deco)
 
         # Gestion des événements
         for event in pygame.event.get():
