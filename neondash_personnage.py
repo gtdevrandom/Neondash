@@ -11,6 +11,8 @@ class personnage:
         self.speed = float(speed)
         self.screen_height = int(screen_height)
         self.vel_y = 0.0
+        self.gravity = 900  # pixels/sec^2
+        self.jump_strength = -500  # vitesse de saut (négatif = vers le haut)
         # Chargement du skin
         try:
             self.skin = pygame.image.load('perso/personnage/personnage.png').convert_alpha()
@@ -18,26 +20,34 @@ class personnage:
         except Exception:
             self.skin = None
 
-    def move_up(self):
-        self.vel_y = -self.speed
 
-    def move_down(self):
-        self.vel_y = self.speed
+    def jump(self):
+        # Saut uniquement si au sol
+        if self.rect.bottom >= self.screen_height:
+            self.vel_y = self.jump_strength
+
+
+    # move_down n'est plus utilisé, la gravité gère la descente
+
 
     def stop(self):
-        self.vel_y = 0.0
+        pass  # Ne rien faire, la gravité s'applique toujours
+
 
     def set_velocity(self, vy):
         self.vel_y = float(vy)
 
+
     def update(self, dt):
+        # Appliquer la gravité
+        self.vel_y += self.gravity * dt
         dy = self.vel_y * float(dt)
         self.rect.y += int(dy)
 
         if self.rect.top < 0:
             self.rect.top = 0
             self.vel_y = 0
-        if self.rect.bottom > self.screen_height:
+        if self.rect.bottom >= self.screen_height:
             self.rect.bottom = self.screen_height
             self.vel_y = 0
 

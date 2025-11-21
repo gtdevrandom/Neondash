@@ -7,6 +7,7 @@ class Cube:
 		self.rect = pygame.Rect(x, y, size, size)
 		self.color = color
 		self.speed = speed
+		self.angle = 0  # angle de rotation en degrés
 		try:
 			self.skin = pygame.image.load('cubes/cubes.png').convert_alpha()
 			self.skin = pygame.transform.scale(self.skin, (size, size))
@@ -16,8 +17,18 @@ class Cube:
 	def update(self):
 		self.rect.x -= self.speed
 
+	def rotate(self, angle):
+		self.angle = (self.angle + angle) % 360
+
 	def draw(self, surface):
 		if self.skin:
-			surface.blit(self.skin, self.rect)
+			rotated_skin = pygame.transform.rotate(self.skin, self.angle)
+			rotated_rect = rotated_skin.get_rect(center=self.rect.center)
+			surface.blit(rotated_skin, rotated_rect)
 		else:
-			pygame.draw.rect(surface, self.color, self.rect)
+			# Pour le carré, on dessine aussi avec rotation
+			s = pygame.Surface((self.rect.width, self.rect.height), pygame.SRCALPHA)
+			pygame.draw.rect(s, self.color, (0, 0, self.rect.width, self.rect.height))
+			rotated_s = pygame.transform.rotate(s, self.angle)
+			rotated_rect = rotated_s.get_rect(center=self.rect.center)
+			surface.blit(rotated_s, rotated_rect)

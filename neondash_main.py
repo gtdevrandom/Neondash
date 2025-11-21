@@ -90,49 +90,13 @@ def game_screen(window):
     clock = pygame.time.Clock()
     running = True
     player = personnage(100, HEIGHT//2, size=50, color=(0, 200, 255), screen_height=HEIGHT)
-    cubes = []
-    spikes = []
-    obstacle_timer = 0
-    obstacle_interval = 1500  # ms
-    last_time = pygame.time.get_ticks()
 
+    mouse_held = False
     while running:
         dt = clock.tick(FPS) / 1000.0
         window.fill((30, 30, 40))
 
-        now = pygame.time.get_ticks()
-        if now - obstacle_timer > obstacle_interval:
-            if random.choice([True, False]):
-                cubes.append(Cube(WIDTH, HEIGHT-80, size=40, color=(255,255,0), speed=6))
-            else:
-                spikes.append(Spike(WIDTH, HEIGHT-60, width=30, height=40, color=(255,0,0), speed=6))
-            obstacle_timer = now
-
-        for cube in cubes:
-            cube.update()
-        for spike in spikes:
-            spike.update()
-        cubes = [c for c in cubes if c.rect.right > 0]
-        spikes = [s for s in spikes if s.rect.right > 0]
-
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP]:
-            player.move_up()
-        elif keys[pygame.K_DOWN]:
-            player.move_down()
-        else:
-            player.stop()
-        player.update(dt)
-
-        player.draw(window)
-        for cube in cubes:
-            cube.draw(window)
-        for spike in spikes:
-            spike.draw(window)
-
-        draw_text(window, 'Echap pour menu', 24, WIDTH//2, 30, CYAN)
-        pygame.display.flip()
-
+        # Gestion des événements
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -140,13 +104,23 @@ def game_screen(window):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-        # Collision (simple)
-        for cube in cubes:
-            if player.rect.colliderect(cube.rect):
-                running = False
-        for spike in spikes:
-            if player.rect.colliderect(spike.rect):
-                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    mouse_held = True
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    mouse_held = False
+
+        keys = pygame.key.get_pressed()
+        jump_held = keys[pygame.K_UP] or keys[pygame.K_SPACE] or mouse_held or pygame.mouse.get_pressed()[0]
+        if jump_held:
+            player.jump()
+
+        player.update(dt)
+        player.draw(window)
+
+        draw_text(window, 'Echap pour menu', 24, WIDTH//2, 30, CYAN)
+        pygame.display.flip()
     return MENU
 
 def main():
