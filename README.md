@@ -22,7 +22,7 @@
 - ~~Ajouter cubes~~
 - ~~Ajouter sauts~~
 - ajouter orbs ?
-
+- pièces
 
 - Ajouter ship 
 - Ajouter zig zag
