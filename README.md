@@ -1,11 +1,11 @@
 # Jeu style geometry dash
 
 - Ajouter menu
-    - Menu lancer le jeu
-    - Paramètres
+    - ~~Menu lancer le jeu~~
+    - ~~Paramètres~~
         - Son
         - Musique
-    - skins
+    - ~~skins~~
     
 
 - Skin choissisable
@@ -18,9 +18,9 @@
     - Changement de couleur
     - Animation fin de niveau
    
-- Ajouter spikes (2 tailles)
-- Ajouter cubes
-- Ajouter sauts
+- ~~Ajouter spikes (2 tailles)~~
+- ~~Ajouter cubes~~
+- ~~Ajouter sauts~~
 - ajouter orbs ?
 
 
