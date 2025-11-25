@@ -37,5 +37,5 @@
 # Ordre du fond de la map
 - ~~Fond de map~~
 - ~~Chaines + briques + lanternes~~
-- Particules ~~(sur github)~~
-- jeu
+- ~~Particules~~ ~~(sur github)~~
+- ~~jeu~~ (ensemble fait reste  a faire la map) 
