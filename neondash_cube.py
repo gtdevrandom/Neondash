@@ -3,10 +3,10 @@ from pygame.locals import *
 
 #*************************************************
 class Cube:
-	def __init__(self, x, y, size=40, color=(255, 255, 0), speed=5):
+	def __init__(self, x, y, size=40, color=(255, 255, 0), speed=200):
 		self.rect = pygame.Rect(x, y, size, size)
 		self.color = color
-		self.speed = speed
+		self.speed = float(speed)  # pixels per second
 		self.angle = 0  # angle de rotation en degrés
 		try:
 			self.skin = pygame.image.load('cubes/cubes.png').convert_alpha()
@@ -14,8 +14,9 @@ class Cube:
 		except Exception:
 			self.skin = None
 
-	def update(self):
-		self.rect.x -= self.speed
+	def update(self, dt):
+		# move according to speed (pixels per second)
+		self.rect.x -= int(self.speed * dt)
 
 	def rotate(self, angle):
 		self.angle = (self.angle + angle) % 360

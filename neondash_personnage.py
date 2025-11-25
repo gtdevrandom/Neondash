@@ -19,11 +19,13 @@ class personnage:
             self.skin = pygame.transform.scale(self.skin, (size, size))
         except Exception:
             self.skin = None
+        # Indicateur si le joueur est sur une plateforme (autre que le sol)
+        self.on_ground = False
 
 
     def jump(self):
-        # Saut uniquement si au sol
-        if self.rect.bottom >= self.screen_height:
+        # Saut uniquement si au sol (sol ou plateforme)
+        if self.rect.bottom >= self.screen_height or self.on_ground:
             self.vel_y = self.jump_strength
 
 

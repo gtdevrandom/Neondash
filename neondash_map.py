@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+import json
 from neondash_cube import Cube
 from neondash_spike import Spike
 
@@ -83,7 +84,7 @@ class BackgroundScroller:
 
 
 class GameMap:
-    def __init__(self, width, height):
+    def __init__(self, width, height, map_file=None, scroll_speed=200):
         self.WIDTH = width
         self.HEIGHT = height
 
@@ -132,6 +133,13 @@ class GameMap:
                 last_deco_x = deco[0]
                 last_idx = deco[2]
 
+        # Map objects (cubes and spikes) loaded from JSON
+        self.scroll_speed = float(scroll_speed)  # pixels per second
+        self.cubes = []  # list of Cube instances
+        self.spikes = []  # list of Spike instances
+        if map_file:
+            self.load_map(map_file)
+
     def _spawn_deco(self, last_idx=None):
         idxs = list(range(len(self.deco_infos)))
         weights = [info[1] for info in self.deco_infos]
@@ -147,6 +155,39 @@ class GameMap:
         x = self.WIDTH + random.randint(0, 200)
         return (x, y, idx)
 
+    def load_map(self, path):
+        """Charge une map depuis un fichier JSON.
+        Format attendu :
+        {
+            "objects": [
+                {"type":"c", "x":800, "y":600, "w":80, "h":40},
+                {"type":"s", "x":1200, "y":760, "w":30, "h":40}
+            ]
+        }
+        types : 'c' = cube (plateforme), 's' = spike (mortel)
+        """
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+        except Exception:
+            print('Erreur chargement map:', path)
+            return
+        objs = data.get('objects', [])
+        for o in objs:
+            t = o.get('type')
+            x = int(o.get('x', self.WIDTH))
+            y = int(o.get('y', 0))
+            # Les cubes ont la même taille que le perso (50x50)
+            if t == 'c':
+                size = 50
+                cube = Cube(x, y, size=size, speed=self.scroll_speed)
+                self.cubes.append(cube)
+            elif t == 's':
+                w = int(o.get('w', 40))
+                h = int(o.get('h', w))
+                spike = Spike(x, y, width=w, height=h, speed=self.scroll_speed)
+                self.spikes.append(spike)
+
     def update(self, dt):
         self.background.update(dt)
 
@@ -154,8 +195,16 @@ class GameMap:
         for d in self.decorations:
             d.update(dt, self.deco_speed)
 
-        # remove off-screen
+        # update map objects
+        for c in self.cubes:
+            c.update(dt)
+        for s in self.spikes:
+            s.update(dt)
+
+        # remove off-screen decorations and objects
         self.decorations = [d for d in self.decorations if d.x + d.img.get_width() > 0]
+        self.cubes = [c for c in self.cubes if c.rect.x + c.rect.width > 0]
+        self.spikes = [s for s in self.spikes if s.rect.x + s.rect.width > 0]
 
         # spawn new if needed
         if not self.decorations or (self.decorations and self.decorations[-1].x < self.WIDTH - self.min_distance):
@@ -168,3 +217,8 @@ class GameMap:
         self.background.draw(surface)
         for d in self.decorations:
             d.draw(surface)
+        # draw cubes and spikes
+        for c in self.cubes:
+            c.draw(surface)
+        for s in self.spikes:
+            s.draw(surface)

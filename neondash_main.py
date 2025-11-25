@@ -89,8 +89,7 @@ def game_screen(window):
     running = True
     player = personnage(100, HEIGHT//2, size=50, color=(0, 200, 255), screen_height=HEIGHT)
 
-    # Use the centralized GameMap to handle background and decorations
-    game_map = GameMap(WIDTH, HEIGHT)
+    game_map = GameMap(WIDTH, HEIGHT, map_file='maps/example_map.json')
 
     mouse_held = False
     while running:
@@ -116,11 +115,33 @@ def game_screen(window):
         if jump_held:
             player.jump()
 
-        # Update
-        player.update(dt)
         game_map.update(dt)
 
-        # Draw
+        prev_bottom = player.rect.bottom
+
+        player.update(dt)
+
+        player.on_ground = False
+        if player.rect.bottom >= HEIGHT:
+            player.on_ground = True
+
+        # Collision resolution with cubes
+        for c in game_map.cubes:
+            if player.rect.colliderect(c.rect):
+                if player.vel_y >= 0 and prev_bottom <= c.rect.top and player.rect.bottom >= c.rect.top:
+                    player.rect.bottom = c.rect.top
+                    player.vel_y = 0
+                    player.on_ground = True
+                else:
+                    # Mort si collision latérale (poussé par le cube)
+                    return MENU
+
+        # vérifier les spikes
+        for s in game_map.spikes:
+            if player.rect.colliderect(s.rect):
+                # Joueur mort
+                return MENU
+
         game_map.draw(window)
         player.draw(window)
 
