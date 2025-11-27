@@ -5,17 +5,16 @@
 - Ajouter menu
     - ~~Menu lancer le jeu~~
     - ~~Paramètres~~
-        - Son
-        - Musique
+        - ~~Musique~~
     - ~~skins~~
     
-- musique
+- ~~musique~~
 - Skin choissisable
     - Cube
     - Ship 
 - Animations :
     - Explosion quand toucher le sol
-    - Écran mort
+    - ~~Écran mort~~
     ~~- Faire image de fond~~
     - ~~Changement de couleur~~
     - Animation fin de niveau
