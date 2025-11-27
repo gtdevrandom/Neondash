@@ -1,5 +1,8 @@
 # Jeu Style Geometry Dash en python
 
+<img width="2560" height="758" alt="Python_logo_and_wordmark svg" src="https://github.com/user-attachments/assets/367fb215-e93c-40aa-9f45-11e5c5b7a930" />
+
+
 Un jeu inspiré de Geometry Dash, développé en Python à l’aide de Pygame.
 
 Installation
