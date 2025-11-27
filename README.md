@@ -1,40 +1,73 @@
-# Jeu style geometry dash
+# Jeu Style Geometry Dash en python
 
-## Pour télécharger : ajouter pygame avec "pip install pygame"
+Un jeu inspiré de Geometry Dash, développé en Python à l’aide de Pygame.
 
-- Ajouter menu
-    - ~~Menu lancer le jeu~~
-    - ~~Paramètres~~
-        - ~~Musique~~
-    - ~~skins~~
-    
-- ~~musique~~
-- Skin choissisable
-    - Cube
-    - Ship 
-- Animations :
-    - Explosion quand toucher le sol
-    - ~~Écran mort~~
-    ~~- Faire image de fond~~
-    - ~~Changement de couleur~~
-    - Animation fin de niveau
-   
-- ~~Ajouter spikes (2 tailles)~~
-- ~~Ajouter cubes~~
-- ~~Ajouter sauts~~
-- ajouter orbs ?
-- pièces
+Installation
 
-- Ajouter ship 
-- Ajouter zig zag
-    - Animation changement entre cube et ship 
-- Ajouter changement de ciel ?
-- Ajouter des portails ?
-    - Portails qui fait transformer en ship     
+1.  Installer Pygame : <code>pip install pygame</code>
 
+2.  Lancer le jeu : <code>python main.py</code>
 
-# Ordre du fond de la map
-- ~~Fond de map~~
-- ~~Chaines + briques + lanternes~~
-- ~~Particules~~ ~~(sur github)~~
-- ~~jeu~~ (ensemble fait reste  a faire la map) 
+## Fonctionnalités
+
+-   Menu principal
+    -   Lancer le jeu
+    -   Paramètres (musique)
+    -   Sélection de skins **(à faire)**
+
+## Skins disponibles **(à faire)**
+
+-   Cube
+-   Ship
+
+## Animations
+
+-   Explosion lors d’une collision **(à faire)**
+-   Écran de mort
+-   Changement de couleur du fond
+-   Fond de map personnalisé
+
+## Objets & Gameplay
+
+-   Spikes
+-   Cubes / blocs
+-   Sauts
+-   Orbs **(à faire)**
+-   Pièces **(à faire)**
+
+## Modes de déplacement
+
+-   Cube
+-   Ship **(à faire)**
+-   Zig-zag **(à faire)**
+    -   Animation de transition entre les modes
+
+## Autres éléments
+
+-   Changement de ciel
+-   Portails (dont transformation en Ship) **(à faire)**
+
+## Ordre d’affichage de la map
+
+1.  Fond de map
+2.  Chaînes, briques, lanternes
+3.  Particules
+4.  Jeu
+
+## To-Do List
+
+-   ☒ Menu + paramètres
+-   ☒ Musique
+-   ☒ Fond de map / décorations
+-   ☒ Spikes
+-   ☒ Écran de mort
+-   ☐ Animations diverses
+-   ☐ Sélection des skins
+-   ☐ Portails
+-   ☐ Pièces
+-   ☐ Orbs
+-   ☐ Ship
+-   ☐ Zig-zag
+-   ☐ Portails
+-   ☐ Pièces
+-   ☐ Map finale
