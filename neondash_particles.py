@@ -2,7 +2,7 @@ import pygame
 import random
 import os
 
-PARTICULES_PATH = 'fond/particules'
+PARTICULES_PATH = 'textures/fond/particules'
 PARTICULES_FILES = [
     'particule1.png', 'particule2.png', 'particule3.png', 'particule4.png',
     'particule5.png', 'particule6.png', 'particule7.png', 'particule8.png'
@@ -11,7 +11,7 @@ PARTICULES_FILES = [
 class Particle:
     def __init__(self, images, width, height):
         self.img = random.choice(images).copy()
-        self.img.set_alpha(80)  # Opacité plus faible (~30%)
+        self.img.set_alpha(80)  # Opacité plus faible 30%)
         self.x = random.uniform(0, width)
         self.y = random.uniform(0, height)
         self.speed = random.uniform(80, 200)
@@ -32,7 +32,7 @@ class Particle:
         surface.blit(self.img, (self.x, self.y))
 
 class ParticleSystem:
-    def __init__(self, width, height, count=8):  # Moins de particules
+    def __init__(self, width, height, count=6):
         self.images = []
         for fname in PARTICULES_FILES:
             path = os.path.join(PARTICULES_PATH, fname)

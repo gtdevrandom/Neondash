@@ -9,7 +9,7 @@ class Cube:
 		self.speed = float(speed)  # pixels per second
 		self.angle = 0  # angle de rotation en degrés
 		try:
-			self.skin = pygame.image.load('cubes/cubes.png').convert_alpha()
+			self.skin = pygame.image.load('textures/cubes/cubes.png').convert_alpha()
 			self.skin = pygame.transform.scale(self.skin, (size, size))
 		except Exception:
 			self.skin = None

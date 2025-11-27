@@ -1,9 +1,6 @@
 import pygame, sys
 from pygame.locals import *
 
-
-#****************************************
-
 class personnage:
     def __init__(self, x, y, size=50, color=(0, 128, 255), speed=200, screen_height=600):
         self.rect = pygame.Rect(int(x), int(y), int(size), int(size))
@@ -11,11 +8,11 @@ class personnage:
         self.speed = float(speed)
         self.screen_height = int(screen_height)
         self.vel_y = 0.0
-        self.gravity = 900  # pixels/sec^2
+        self.gravity = 900
         self.jump_strength = -500  # vitesse de saut (négatif = vers le haut)
         # Chargement du skin
         try:
-            self.skin = pygame.image.load('perso/personnage/personnage.png').convert_alpha()
+            self.skin = pygame.image.load('textures/perso/personnage/personnage.png').convert_alpha()
             self.skin = pygame.transform.scale(self.skin, (size, size))
         except Exception:
             self.skin = None
@@ -24,12 +21,9 @@ class personnage:
 
 
     def jump(self):
-        # Saut uniquement si au sol (sol ou plateforme)
+        # Saut uniquement si au sol (sol ou plateforme) pour éviter double jump
         if self.rect.bottom >= self.screen_height or self.on_ground:
             self.vel_y = self.jump_strength
-
-
-    # move_down n'est plus utilisé, la gravité gère la descente
 
 
     def stop(self):

@@ -28,25 +28,20 @@ class BackgroundScroller:
         self.height = height
         self.x = 0
         self.speed = speed
-        # Tint effect state: start/current/target colors and timing
-        # Start with a blue tint
         self.current_color = (0, 100, 255)
         self.start_color = self.current_color
         self.target_color = self.current_color
         self.tint_elapsed = 0.0
         self.tint_duration = random.uniform(6.0, 12.0)
-        # Immediately pick a new random target so the effect starts animating
         self._pick_new_tint()
 
     def _pick_new_tint(self):
-        # Choose a new random target color (allow full RGB range)
         r = random.randint(0, 255)
         g = random.randint(0, 255)
         b = random.randint(0, 255)
         self.start_color = self.current_color
         self.target_color = (r, g, b)
         self.tint_elapsed = 0.0
-        # Faster transitions than before (un peu plus rapide)
         self.tint_duration = random.uniform(2.0, 5.0)
 
     def update(self, dt):
@@ -54,22 +49,18 @@ class BackgroundScroller:
         if self.x <= -self.width:
             self.x += self.width
 
-        # Update tint interpolation
         self.tint_elapsed += dt
         if self.tint_elapsed >= self.tint_duration:
-            # Finish transition and pick a new target
             self.current_color = self.target_color
             self._pick_new_tint()
         else:
             t = self.tint_elapsed / max(1e-6, self.tint_duration)
-            # Linear interpolation per channel
             cr = int(self.start_color[0] + (self.target_color[0] - self.start_color[0]) * t)
             cg = int(self.start_color[1] + (self.target_color[1] - self.start_color[1]) * t)
             cb = int(self.start_color[2] + (self.target_color[2] - self.start_color[2]) * t)
             self.current_color = (cr, cg, cb)
 
     def draw(self, surface):
-        # Apply tint to a copy of the background using multiplicative blend
         try:
             tinted = self.img.copy()
             tint_surf = pygame.Surface((self.width, self.height)).convert_alpha()
@@ -78,7 +69,6 @@ class BackgroundScroller:
             surface.blit(tinted, (self.x, 0))
             surface.blit(tinted, (self.x + self.width, 0))
         except Exception:
-            # Fallback to original if tinting fails for any reason
             surface.blit(self.img, (self.x, 0))
             surface.blit(self.img, (self.x + self.width, 0))
 
@@ -88,18 +78,20 @@ class GameMap:
         self.WIDTH = width
         self.HEIGHT = height
 
-        self.background = BackgroundScroller('fond/base/fond.png', width, height, speed=100)
+        self._map_file = map_file  # pour relancer la map
+
+        self.background = BackgroundScroller('textures/fond/base/fond.png', width, height, speed=100)
 
         # décorations informations: (path, weight, type)
         self.deco_infos = [
-            ('fond/lanternes/lanterne1.png', 1, 'lanterne'),
-            ('fond/lanternes/lanterne2.png', 1, 'lanterne'),
-            ('fond/lanternes/lanterne3.png', 1, 'lanterne'),
-            ('fond/brique/brique.png', 0.3, 'brique'),
-            ('fond/chaines/chaine.png', 1, 'chaine'),
-            ('fond/chaines/chaine1.png', 1, 'chaine'),
-            ('fond/chaines/chaine2.png', 1, 'chaine'),
-            ('fond/chaines/chaine3.png', 1, 'chaine'),
+            ('textures/fond/lanternes/lanterne1.png', 1, 'lanterne'),
+            ('textures/fond/lanternes/lanterne2.png', 1, 'lanterne'),
+            ('textures/fond/lanternes/lanterne3.png', 1, 'lanterne'),
+            ('textures/fond/brique/brique.png', 0.3, 'brique'),
+            ('textures/fond/chaines/chaine.png', 1, 'chaine'),
+            ('textures/fond/chaines/chaine1.png', 1, 'chaine'),
+            ('textures/fond/chaines/chaine2.png', 1, 'chaine'),
+            ('textures/fond/chaines/chaine3.png', 1, 'chaine'),
         ]
 
         # Charger et mettre à l'échelle les images
@@ -133,10 +125,9 @@ class GameMap:
                 last_deco_x = deco[0]
                 last_idx = deco[2]
 
-        # Map objects (cubes and spikes) loaded from JSON
-        self.scroll_speed = float(scroll_speed)  # pixels per second
-        self.cubes = []  # list of Cube instances
-        self.spikes = []  # list of Spike instances
+        self.scroll_speed = float(scroll_speed)  # pixels par secondes
+        self.cubes = []
+        self.spikes = []
         if map_file:
             self.load_map(map_file)
 
@@ -157,7 +148,7 @@ class GameMap:
 
     def load_map(self, path):
         """Charge une map depuis un fichier JSON.
-        Format attendu :
+        Format :
         {
             "objects": [
                 {"type":"c", "x":800, "y":600, "w":80, "h":40},
@@ -195,23 +186,25 @@ class GameMap:
         for d in self.decorations:
             d.update(dt, self.deco_speed)
 
-        # update map objects
+        # update map
         for c in self.cubes:
             c.update(dt)
         for s in self.spikes:
             s.update(dt)
 
-        # remove off-screen decorations and objects
         self.decorations = [d for d in self.decorations if d.x + d.img.get_width() > 0]
         self.cubes = [c for c in self.cubes if c.rect.x + c.rect.width > 0]
         self.spikes = [s for s in self.spikes if s.rect.x + s.rect.width > 0]
 
-        # spawn new if needed
         if not self.decorations or (self.decorations and self.decorations[-1].x < self.WIDTH - self.min_distance):
             last_idx = self.decorations[-1].idx if self.decorations else None
             new = self._spawn_deco(last_idx)
             if not self.decorations or new[0] - self.decorations[-1].x > self.min_distance:
                 self.decorations.append(Decoration(self.deco_images[new[2]], new[0], new[1], new[2]))
+
+        # --- Rejouer la map si tout est sorti ---
+        if self._map_file and not self.cubes and not self.spikes:
+            self.load_map(self._map_file)
 
     def draw(self, surface):
         self.background.draw(surface)
