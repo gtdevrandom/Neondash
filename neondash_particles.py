@@ -10,46 +10,44 @@ PARTICULES_FILES = [
 
 class Particle:
     def __init__(self, images, width, height):
-        self.img = random.choice(images).copy()
-        self.img.set_alpha(80)  # Opacité plus faible 30%)
-        self.x = random.uniform(0, width)
-        self.y = random.uniform(0, height)
-        self.speed = random.uniform(80, 200)
-        self.size = random.uniform(10, 25)  # Taille plus petite
-        self.img = pygame.transform.scale(self.img, (int(self.size), int(self.size)))
+        self.images = images
+        self.width = width
+        self.height = height
+        self.reset()
 
-    def update(self, dt, width, height):
+    def reset(self):
+        self.size = random.uniform(10, 25)
+        self.speed = random.uniform(80, 200)
+        self.x = random.uniform(0, self.width)
+        self.y = random.uniform(0, self.height)
+        self.img = pygame.transform.scale(random.choice(self.images).copy(), (int(self.size), int(self.size)))
+        self.img.set_alpha(80)
+
+    def update(self, dt):
         self.x -= self.speed * dt
         if self.x < -self.size:
-            self.x = width + random.uniform(0, 100)
-            self.y = random.uniform(0, height)
-            self.speed = random.uniform(80, 200)
-            self.size = random.uniform(10, 25)  # Taille plus petite
-            self.img = pygame.transform.scale(self.img, (int(self.size), int(self.size)))
-            self.img.set_alpha(80)
+            self.x = self.width + random.uniform(0, 100)
+            self.reset()
 
     def draw(self, surface):
         surface.blit(self.img, (self.x, self.y))
 
 class ParticleSystem:
     def __init__(self, width, height, count=6):
-        self.images = []
-        for fname in PARTICULES_FILES:
-            path = os.path.join(PARTICULES_PATH, fname)
-            try:
-                img = pygame.image.load(path).convert_alpha()
-                img.set_alpha(80)
-                self.images.append(img)
-            except Exception:
-                pass
+        self.images = [
+            pygame.image.load(os.path.join(PARTICULES_PATH, fname)).convert_alpha()
+            for fname in PARTICULES_FILES #nom des fichiers
+            if os.path.exists(os.path.join(PARTICULES_PATH, fname))
+        ]
         self.particles = [Particle(self.images, width, height) for _ in range(count)]
         self.width = width
         self.height = height
 
+
     def update(self, dt):
-        for p in self.particles:
-            p.update(dt, self.width, self.height)
+        for p in self.particles: #met a jour chaque particule
+            p.update(dt) #dt est le delta time, le temps écoulé depuis la dernière mise à jour
 
     def draw(self, surface):
-        for p in self.particles:
+        for p in self.particles: #dessine chaque particule sur la surface
             p.draw(surface)

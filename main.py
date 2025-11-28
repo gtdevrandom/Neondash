@@ -1,9 +1,9 @@
 import pygame
 import sys
 import os
-from neondash_personnage import personnage
-from neondash_map import GameMap
-from neondash_particles import ParticleSystem
+from source.neondash_personnage import personnage
+from source.neondash_map import GameMap
+from source.neondash_particles import ParticleSystem
 
 # --- Constantes globales ---
 WIDTH, HEIGHT = 1600, 800
@@ -17,7 +17,7 @@ GAME = 'game'
 SETTINGS = 'settings'
 QUIT = 'quit'
 DEATH = 'death'
-VOLUME = 0.5
+VOLUME = 0.5 # Volume initial de la musique
 
 def draw_text(surface, text, size, x, y, color=WHITE, return_rect=False):
     font = pygame.font.SysFont('Arial', size, bold=True)
@@ -168,8 +168,6 @@ def game_screen(window):
     particle_system = ParticleSystem(WIDTH, HEIGHT, count=12)
     mouse_held = False
     menu_btn_rect = pygame.Rect(20, 20, 180, 50)
-
-    # Suppression des landing particles
 
     score = 0
     timer = 0.0

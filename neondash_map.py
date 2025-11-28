@@ -2,8 +2,8 @@ import pygame
 import random
 import math
 import json
-from neondash_cube import Cube
-from neondash_spike import Spike
+from source.neondash_cube import Cube
+from source.neondash_spike import Spike
 
 
 class Decoration:
